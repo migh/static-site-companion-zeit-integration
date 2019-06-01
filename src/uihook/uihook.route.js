@@ -45,10 +45,29 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
         console.error(e);
       }
     }
+  }
 
-    client.config(space, accessToken);
-    const test = await client.getContentTypes();
-    console.log(test);
+  // I am sure there is a better way to do this.
+  const dashboardSections = [
+    step.dashboardDeploy,
+    step.dashboardSitePreview,
+    step.dashboardContentTypes,
+    step.dashboardContent,
+    step.dashboardStats
+  ];
+  if (dashboardSections.includes(action)) {
+    let payload = { section: action };
+
+    if (action === step.dashboardContentTypes) {
+      client.config(space, accessToken);
+      const contentTypes = await client.getContentTypes();
+      payload = {
+        ...payload,
+        ...contentTypes
+      };
+    }
+    
+    return uiMap[step.dashboard](payload);
   }
 
   return uiMap[action || step.view]();
