@@ -1,6 +1,7 @@
 const step = {
   view: 'view',
   config: 'config',
+  dashboard: 'dashboard',
   deploy: 'deploy',
   stats: 'stats',
   preview: 'preview',
@@ -25,17 +26,23 @@ const uiMap = {
         <Input name="accessToken" label="Access Token" value="" />
         <Input name="space" label="Space" value="" />
         <Box display="flex" marginTop="10px" justifyContent="center">
-          <Button action="deploy">Save</Button>
+          <Button action="dashboard" highlight>Continue</Button>
         </Box>
         <Notice type="warn">Note: This are your credentials, please keep them safe!</Notice>
       </Box>
     </Page>`,
-  [step.deploy]: () => `
+  [step.dashboard]: () => `
     <Page>
-      <Box display="flex" flexDirection="column" justifyContent="center" textAlign="center">
-        <H2>Want to deploy your site?</H2>
-        <Box display="flex" marginTop="10px" justifyContent="center">
-          <Button>Yes</Button>
+      <Box display="flex" justifyContent="space-between" textAlign="center">
+        <Box display="flex" flexDirection="column" justifyContent="center">
+          <Button highlight>Deploy</Button>
+          <Button secondary>Site Preview</Button>
+          <Button secondary>Content Types</Button>
+          <Button secondary>Content</Button>
+          <Button secondary>Stats</Button>
+        </Box>
+        <Box display="flex" justifyContent="center">
+          <H2>Some content here!</H2>
         </Box>
       </Box>
     </Page>`

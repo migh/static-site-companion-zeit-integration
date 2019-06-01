@@ -1,6 +1,6 @@
 const { withUiHook } = require('@zeit/integration-utils');
-const contentful = require("contentful");
 
+const { client } = require('../services/contentful');
 const { step, uiMap } = require("./uihook.constants");
 
 module.exports = withUiHook(async ({ payload, zeitClient }) => {
@@ -8,7 +8,6 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
   const metadata = await zeitClient.getMetadata();
   const { accessToken, space, isNotFirstTime } = metadata;
 
-  // const projects = await zeitClient.fetch('/v1/projects/list', {});
   const credentialsComplete = accessToken && space;
   
   let action = payload.action;
@@ -25,14 +24,14 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
       });
 
       if (credentialsComplete) {
-        action = step.deploy;
+        action = step.dashboard;
       }
     } catch(e) {
       console.error(e);
     }
   }
 
-  if (action === step.deploy) {
+  if (action === step.dashboard) {
     if (!credentialsComplete) {
       const { accessToken, space } = payload.clientState;
 
@@ -47,7 +46,7 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
       }
     }
 
-    const client = contentful.createClient({ space, accessToken });
+    client.config(space, accessToken);
     const test = await client.getContentTypes();
     console.log(test);
   }
