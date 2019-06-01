@@ -1,8 +1,14 @@
-const { withUiHook } = require('@zeit/integration-utils');
-const contentful = require("contentful");
+const step = {
+  view: 'view',
+  config: 'config',
+  deploy: 'deploy',
+  stats: 'stats',
+  preview: 'preview',
+  error: 'error'
+};
 
 const uiMap = {
-  view: () => `
+  [step.view]: () => `
     <Page>
       <Box display="flex" flexDirection="column" justifyContent="center" textAlign="center">
         <H1>Welcome!</H1>
@@ -12,7 +18,7 @@ const uiMap = {
         </Box>
       </Box>
     </Page>`,
-  config: () => `
+  [step.config]: () => `
     <Page>
       <Box display="flex" flexDirection="column" justifyContent="center" textAlign="center">
         <H2>Contentful access credentials</H2>
@@ -24,7 +30,7 @@ const uiMap = {
         <Notice type="warn">Note: This are your credentials, please keep them safe!</Notice>
       </Box>
     </Page>`,
-  deploy: () => `
+  [step.deploy]: () => `
     <Page>
       <Box display="flex" flexDirection="column" justifyContent="center" textAlign="center">
         <H2>Want to deploy your site?</H2>
@@ -35,36 +41,7 @@ const uiMap = {
     </Page>`
 };
 
-module.exports = withUiHook(async ({ payload, zeitClient }) => {
-  // Get metadata
-  const metadata = await zeitClient.getMetadata();
-  const { apiKey, spaceId, isNotFirstTime } = metadata;
-
-  // const projects = await zeitClient.fetch('/v1/projects/list', {});
-
-  let action = payload.action;
-
-  if (action === 'view' && isNotFirstTime) {
-    action = 'config';
-  }
-
-  if (action === 'config') {
-    try {
-      await zeitClient.setMetadata({
-        ...metadata,
-        isNotFirstTime: true
-      })
-    } catch(e) {
-      console.error(e);
-    }
-  }
-
-  if (action === 'deploy') {
-    const { accessToken, space } = payload.clientState;
-    const client = contentful.createClient({ space, accessToken });
-    const test = await client.getContentTypes();
-    console.log(test);
-  }
-
-  return uiMap[action || 'view']();
-});
+module.exports = {
+  step,
+  uiMap
+};

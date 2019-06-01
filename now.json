@@ -2,10 +2,10 @@
   "name": "zeit-vizzz-integration",
   "version": 2,
   "builds": [
-    { "src": "src/**/*.js", "use": "@now/node" }
+    { "src": "src/**/*.route.js", "use": "@now/node" }
   ],
   "routes": [
-    { "src": "/uihook", "dest": "/src/uihook/uihook.js" }
+    { "src": "/uihook", "dest": "/src/uihook/uihook.route.js" }
   ]
 }
 
