@@ -31,6 +31,7 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     client.config(space, deliveryToken, managementToken);
   }
 
+
   if (!hasHook) {
     try {
       await client.createHook(space, payload);
