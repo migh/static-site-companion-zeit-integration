@@ -16,42 +16,46 @@ module.exports = async (req, res) => {
   }
 
   if (req.method === 'POST') {
-    const { query } = parse(req.url, true);
-    const { config_id, owner_id } = query;
+    try {
+      const { query } = parse(req.url, true);
+      const { config_id, owner_id } = query;
 
-    const integrationConfig = await getIntegrationConfig(owner_id);
+      const integrationConfig = await getIntegrationConfig(owner_id);
 
-    const headers = {
-      Authorization: `Bearer ${integrationConfig.zeitToken}`
-    };
-    const changes = await json(req);
+      const headers = {
+        Authorization: `Bearer ${integrationConfig.zeitToken}`
+      };
+      const changes = await json(req);
 
-    const meta = await fetch(`https://api.zeit.co/v1/integrations/configuration/${config_id}/metadata`, {
-      headers
-    })
-      .then(res => res.json());
+      const meta = await fetch(`https://api.zeit.co/v1/integrations/configuration/${config_id}/metadata`, {
+        headers
+      })
+        .then(res => res.json());
 
-    const newEntry = changes && {
-      version: changes.sys.version,
-      updatedAt: changes.sys.updatedAt,
-      publishedAt: changes.sys.publishedAt,
-      updatedBy: changes.sys.updatedBy.sys.id,
-      publishedVersion: changes.sys.publishedVersion
-    };
+      const newEntry = changes && {
+        version: changes.sys.version,
+        updatedAt: changes.sys.updatedAt,
+        publishedAt: changes.sys.publishedAt,
+        updatedBy: changes.sys.updatedBy && changes.sys.updatedBy.sys.id,
+        publishedVersion: changes.sys.publishedVersion
+      };
 
-    const newMeta = {
-      ...meta,
-      hasHook: false,
-      contentful: changes && (Array.isArray(meta.contentful) ? [newEntry, ...meta.contentful] : [newEntry])
-    };
+      const newMeta = {
+        ...meta,
+        hasHook: false,
+        contentful: changes && (Array.isArray(meta.contentful) ? [newEntry, ...meta.contentful] : [newEntry])
+      };
 
-    await fetch(`https://api.zeit.co/v1/integrations/configuration/${config_id}/metadata`, {
-      headers,
-      method: 'POST',
-      body: JSON.stringify(newMeta)
-    });
+      await fetch(`https://api.zeit.co/v1/integrations/configuration/${config_id}/metadata`, {
+        headers,
+        method: 'POST',
+        body: JSON.stringify(newMeta)
+      });
 
-    return send(res, 200, newMeta);
+      return send(res, 200, newMeta);
+    } catch (e) {
+      return send(res, 500, e.message);
+    }
   }
 
   return send(res, 404, {
