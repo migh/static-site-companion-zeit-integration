@@ -1,0 +1,13 @@
+{
+  "name": "url-screenshot",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "puppeteer": "^1.17.0"
+  }
+}

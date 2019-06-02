@@ -7,13 +7,17 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
   // Get metadata
   const metadata = await zeitClient.getMetadata();
   const { deliveryToken, space, managementToken, isFirstTime } = metadata;
-  client.config(space, deliveryToken, managementToken);
+
+  const credentialsComplete = deliveryToken && space && managementToken;
+  
+  if (credentialsComplete) {
+    client.config(space, deliveryToken, managementToken);
+  }
 
   if(isFirstTime) {
     const hook = await client.createHook(space, payload.configurationId);
   }
 
-  const credentialsComplete = deliveryToken && space;
   
   let action = payload.action;
 
@@ -39,6 +43,7 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
   if (action === step.dashboard) {
     if (!credentialsComplete) {
       const { deliveryToken, space, managementToken } = payload.clientState;
+      console.log(deliveryToken, space, managementToken);
 
       try {
         await zeitClient.setMetadata({

@@ -77,7 +77,7 @@ const uiMap = {
     <Page>
       <Box display="flex" flexDirection="column" justifyContent="center" textAlign="center">
         <H2>Contentful access credentials</H2>
-        <Input name="accessToken" label="Content Delivery Token" value="" />
+        <Input name="deliveryToken" label="Content Delivery Token" value="" />
         <Input name="managementToken" label="Content Management Token" value="" />
         <Input name="space" label="Space ID" value="" />
         <Box display="flex" marginTop="10px" justifyContent="center">
