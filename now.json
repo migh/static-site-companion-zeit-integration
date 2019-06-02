@@ -12,11 +12,7 @@
   ],
   "env": {
     "HOOK_URL": "https://contentful-integration.now.sh",
-    "MONGO_URI": "@contenful-integration-mongo-url",
-    "NODE_ENV": "production",
-    "ZEIT_CLIENT_ID": "@contentful-integration-zeit-client-id",
-    "ZEIT_CLIENT_REDIRECT_URI": "@contentful-integration-zeit-redirect-id",
-    "ZEIT_CLIENT_SECRET": "@contentful-integration-zeit-client-secret"
+    "NODE_ENV": "production"
   }
 }
 

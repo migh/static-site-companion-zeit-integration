@@ -23,7 +23,7 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
 
   // Get metadata
   const metadata = await zeitClient.getMetadata();
-  const { deliveryToken, space, managementToken, isFirstTime, contentful = [] } = metadata;
+  const { deliveryToken, space, managementToken, isFirstTime = true, contentful = [], hasHook } = metadata;
 
   const credentialsComplete = deliveryToken && space && managementToken;
 
@@ -31,8 +31,20 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     client.config(space, deliveryToken, managementToken);
   }
 
-  if(isFirstTime) {
-    const hook = await client.createHook(space, payload);
+  if (!hasHook) {
+    try {
+      await client.createHook(space, payload);
+      await zeitClient.setMetadata({
+        ...metadata,
+        hasHook: true
+      });
+    } catch (e) {
+      console.error(e);
+      await zeitClient.setMetadata({
+        ...metadata,
+        hasHook: false
+      });
+    }
   }
 
 

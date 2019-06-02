@@ -12,20 +12,23 @@ class Client {
 
   config(space, deliveryToken, managementToken) {
     this.__delivery = contentful.createClient({ space, accessToken: deliveryToken });
-    this.__management = contentfulMgmt.createClient({accessToken: managementToken})
+    this.__management = contentfulMgmt.createClient({ accessToken: managementToken })
   }
 
   async createHook (spaceId, uiHookPayload) {
-    client.getSpace(spaceId)
-    .then((space) => space.createWebhook({
-      'name': 'My webhook',
-      'url': `${HOOK_URL}/webhook?config_id=${uiHookPayload.configurationId}&owner_id=${payload.user.id}`,
-      'topics': [
-        '*.publish'
-      ]
-    }))
-    .then((webhook) => console.log(webhook))
-    .catch(console.error)
+    const space = await this.__management.getSpace(spaceId);
+    try {
+      const webhook = await space.createWebhook({
+        'name': `zeit-now-hook-${uiHookPayload.integrationId}-${uiHookPayload.configurationId}`,
+        'url': `${HOOK_URL}/webhook?config_id=${uiHookPayload.configurationId}&owner_id=${uiHookPayload.user.id}`,
+        'topics': [
+          '*.publish'
+        ]
+      });
+      console.info(`Hook created!`, webhook.name);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   async getContentTypes() {
