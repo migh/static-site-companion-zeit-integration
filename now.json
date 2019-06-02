@@ -1,0 +1,11 @@
+{
+  "name": "contentful-integration",
+  "version": 2,
+  "builds": [
+    { "src": "src/**/*.js", "use": "@now/node" }
+  ],
+  "routes": [
+    { "src": "/uihook", "dest": "/src/uihook/uihook.route.js" }
+  ]
+}
+
