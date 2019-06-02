@@ -1,20 +1,39 @@
 const contentful = require("contentful");
+const contentfulMgmt = require('contentful-management')
 
 class Client {
   constructor() {
-    this.__client = null;
+    this.__delivery = null;
+    this.__management = null;
   }
 
-  config(space, accessToken) {
-    this.__client = contentful.createClient({ space, accessToken });
+  config(space, deliveryToken, managementToken) {
+    this.__delivery = contentful.createClient({ space, accessToken: deliveryToken });
+    this.__management = contentfulMgmt.createClient({accessToken: managementToken})
+  }
+
+  async createHook (spaceId, zeitConfigId) {
+    client.getSpace(spaceId)
+    .then((space) => space.createWebhook({
+      'name': 'My webhook',
+      'url': `https://contentful-integration.now.sh/webhook?configId=${zeitConfigId}`,
+      'topics': [
+        'Entry.create',
+        'ContentType.create',
+        '*.publish',
+        'Asset.*'
+      ]
+    }))
+    .then((webhook) => console.log(webhook))
+    .catch(console.error)
   }
 
   async getContentTypes() {
-    if (!this.__client) {
+    if (!this.__delivery) {
       throw new Error('You need to config Contentful client first. Use `client.config(space, accessToken)`')
     }
 
-    const raw = await this.__client.getContentTypes();
+    const raw = await this.__delivery.getContentTypes();
     return {
       total: raw.total,
       types: raw.items.map(type => ({

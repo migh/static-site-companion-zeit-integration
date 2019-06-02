@@ -6,6 +6,8 @@
   "dependencies": {
     "@zeit/integration-utils": "latest",
     "contentful": "^7.6.0",
-    "node-fetch": "^2.6.0"
+    "contentful-management": "^5.7.2",
+    "express": "^4.17.1",
+    "puppeteer": "^1.17.0"
   }
 }

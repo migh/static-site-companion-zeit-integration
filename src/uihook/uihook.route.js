@@ -6,13 +6,18 @@ const { step, uiMap } = require("./uihook.constants");
 module.exports = withUiHook(async ({ payload, zeitClient }) => {
   // Get metadata
   const metadata = await zeitClient.getMetadata();
-  const { accessToken, space, isNotFirstTime } = metadata;
+  const { deliveryToken, space, managementToken, isFirstTime } = metadata;
+  client.config(space, deliveryToken, managementToken);
 
-  const credentialsComplete = accessToken && space;
+  if(isFirstTime) {
+    const hook = await client.createHook(space, payload.configurationId);
+  }
+
+  const credentialsComplete = deliveryToken && space;
   
   let action = payload.action;
 
-  if (action === step.view && isNotFirstTime) {
+  if (action === step.view && !isFirstTime) {
     action = step.config;
   }
 
@@ -20,7 +25,7 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     try {
       await zeitClient.setMetadata({
         ...metadata,
-        isNotFirstTime: true
+        isFirstTime: false
       });
 
       if (credentialsComplete) {
@@ -33,13 +38,14 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
 
   if (action === step.dashboard) {
     if (!credentialsComplete) {
-      const { accessToken, space } = payload.clientState;
+      const { deliveryToken, space, managementToken } = payload.clientState;
 
       try {
         await zeitClient.setMetadata({
           ...metadata,
-          accessToken,
-          space
+          deliveryToken,
+          space,
+          managementToken
         });
       } catch(e) {
         console.error(e);
@@ -67,7 +73,6 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     }
     
     if (action === step.dashboardContentTypes) {
-      client.config(space, accessToken);
       const contentTypes = await client.getContentTypes();
       templatePayload = {
         ...templatePayload,
@@ -76,7 +81,7 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     }
 
     if(action === step.dashboardStats) {
-      
+
     }
     
     return uiMap[step.dashboard](templatePayload);
@@ -86,7 +91,7 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     console.log('Deploying...');
 
     // const metadata = await zeitClient.getMetadata(); 
-    // modify envvar accesstoken & spaceId
+    // modify envvar deliveryToken & spaceId
     return uiMap[step.dashboard]({ section: step.dashboardDeploy, deployed: true });
   }
 
