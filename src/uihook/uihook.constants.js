@@ -56,9 +56,15 @@ const dashboardContentMap = {
   [step.dashboardContent]: () => `
     <H2>Content</H2>
   `,
-  [step.dashboardStats]: () => `
+  [step.dashboardStats]: ({ data }) => console.log(data) || `
     <H2>Stats</H2>
-    <P>Is this working?</P>
+    <Box textAlign="left" marginLeft="40px">
+      ${data.map(d =>
+        `<P>${Object.keys(d).map(k => 
+            `<B>${k}</B>: ${d[k]}`
+          ).join('<BR />')}</P>`
+        ).join('<BR />')}
+    </Box>
   `
 };
 
