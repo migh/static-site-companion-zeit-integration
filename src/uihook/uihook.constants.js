@@ -22,14 +22,29 @@ const dashboardMenu = `
   <Button secondary action="${step.dashboardStats}">Stats</Button>
 </Box>`;
 
+const deployContents = {
+  global: () => `
+    <Notice type="warn">You are on the account scope. Please select a project.</Notice>
+  `,
+  project: () => `
+    <Button highlight action="${step.deploy}">Deploy project</Button>
+  `
+};
+
 const dashboardContentMap = {
   [step.dashboard]: () => `
     <H2>Welcome to vizzz integration dashboard!</H2>
     <P>Here you can see how your Contentful site is going create a deploy or trigger a build.</P>
   `,
-  [step.dashboardDeploy]: () => `
+  [step.dashboardDeploy]: (options) => {
+    const content = deployContents[options.project ? 'project' : 'global'](options);
+
+    return `
     <H2>Deploy</H2>
-  `,
+    <ProjectSwitcher />
+    ${ options.deployed ? `<H2>Deployed</H2>` : `<H2>Not deployed</H2>`}
+    ${ content }`;
+  },
   [step.dashboardSitePreview]: () => `
     <H2>Site Preview</H2>
   `,
@@ -77,7 +92,10 @@ const uiMap = {
           ${dashboardContentMap[section](options)}
         </Box>
       </Box>
-    </Page>`
+    </Page>`,
+    [step.deploy]: () => `
+      <H2>Deploying...</H2>
+    `
 };
 
 module.exports = {

@@ -56,18 +56,34 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     step.dashboardStats
   ];
   if (dashboardSections.includes(action)) {
-    let payload = { section: action };
+    let templatePayload = { section: action };
 
+    if (action === step.dashboardDeploy) {
+      const { project } = payload;
+      templatePayload = {
+        ...templatePayload,
+        project
+      };
+    }
+    
     if (action === step.dashboardContentTypes) {
       client.config(space, accessToken);
       const contentTypes = await client.getContentTypes();
-      payload = {
-        ...payload,
+      templatePayload = {
+        ...templatePayload,
         ...contentTypes
       };
     }
     
-    return uiMap[step.dashboard](payload);
+    return uiMap[step.dashboard](templatePayload);
+  }
+
+  if (action === step.deploy) {
+    console.log('Deploying...');
+
+    // const metadata = await zeitClient.getMetadata(); 
+    // modify envvar accesstoken & spaceId
+    return uiMap[step.dashboard]({ section: step.dashboardDeploy, deployed: true });
   }
 
   return uiMap[action || step.view]();
