@@ -104,6 +104,14 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
       };
     }
 
+    if(action === step.dashboardContent) {
+      const { project } = payload;
+      templatePayload = {
+        ...templatePayload,
+        project
+      };
+    }
+
     if (action === step.dashboardContentTypes) {
       const contentTypes = await client.getContentTypes();
       templatePayload = {

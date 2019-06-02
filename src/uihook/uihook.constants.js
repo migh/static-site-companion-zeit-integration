@@ -32,6 +32,15 @@ const deployContents = {
   `
 };
 
+const contentContents = {
+  global: () => `
+  <Notice type="warn">You are on the account scope. Please select a project.</Notice>
+`,
+project: () => `
+  <P>Here be dragons :P</P>
+`
+};
+
 const dashboardContentMap = {
   [step.dashboard]: () => `
     <H2>Welcome to the dashboard!</H2>
@@ -54,9 +63,17 @@ const dashboardContentMap = {
     <P>You currently have ${total} content types.</P>
     <P>${ types.map(type => `<B>${ type.name }</B>`).join('<BR />')}</P>
   `,
-  [step.dashboardContent]: () => `
-    <H2>Content</H2>
-  `,
+
+  [step.dashboardContent]: (options) => {
+    const content = contentContents[options.project ? 'project' : 'global'](options);
+
+    return `
+      <H2>Content</H2>
+      <ProjectSwitcher />
+      <P>${content}</P>
+    `
+  },
+
   [step.dashboardStats]: ({ data }) => `
     <H2>Stats</H2>
     <Box textAlign="left" marginLeft="40px">
