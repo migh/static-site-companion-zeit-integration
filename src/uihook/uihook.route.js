@@ -87,7 +87,6 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
   // I am sure there is a better way to do this.
   const dashboardSections = [
     step.dashboardDeploy,
-    step.dashboardSitePreview,
     step.dashboardContentTypes,
     step.dashboardContent,
     step.dashboardStats

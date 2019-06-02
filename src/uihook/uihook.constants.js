@@ -16,11 +16,10 @@ const step = {
 
 const dashboardMenu = `
 <Box display="flex" flexDirection="column" justifyContent="center">
-  <Button highlight action="${step.dashboardDeploy}">Deploy</Button>
-  <Button secondary action="${step.dashboardSitePreview}">Site Preview</Button>
+  <Button highlight action="${step.dashboardStats}">Stats</Button>
+  <Button secondary action="${step.dashboardDeploy}">Deploy</Button>
   <Button secondary action="${step.dashboardContentTypes}">Content Types</Button>
   <Button secondary action="${step.dashboardContent}">Content</Button>
-  <Button secondary action="${step.dashboardStats}">Stats</Button>
 </Box>`;
 
 const deployContents = {
@@ -55,9 +54,6 @@ const dashboardContentMap = {
     ${ options.deployed ? `<H2>Deployed</H2>` : `<H2>Not deployed</H2>`}
     ${ content }`;
   },
-  [step.dashboardSitePreview]: () => `
-    <H2>Site Preview</H2>
-  `,
   [step.dashboardContentTypes]: ({total, types} = { total: 0, types: []}) => `
     <H2>Content Types</H2>
     <P>You currently have ${total} content types.</P>
@@ -76,6 +72,7 @@ const dashboardContentMap = {
 
   [step.dashboardStats]: ({ data }) => `
     <H2>Stats</H2>
+    <P>In this section you'll be able to see the historic of changes in your contentful space.</P>
     <Box textAlign="left" marginLeft="40px">
       ${data.map(d =>
         `<P>${Object.keys(d).map(k => 
