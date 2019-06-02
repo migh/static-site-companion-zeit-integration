@@ -16,7 +16,7 @@ class Client {
     client.getSpace(spaceId)
     .then((space) => space.createWebhook({
       'name': 'My webhook',
-      'url': `https://contentful-integration.now.sh/webhook?configId=${zeitConfigId}`,
+      'url': `https://contentful-integration.now.sh/webhook?config_id=${zeitConfigId}`,
       'topics': [
         '*.publish'
       ]

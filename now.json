@@ -5,7 +5,9 @@
     { "src": "src/**/*.js", "use": "@now/node" }
   ],
   "routes": [
-    { "src": "/uihook", "dest": "/src/uihook/uihook.route.js" }
+    { "src": "/uihook", "dest": "/src/uihook/uihook.route.js" },
+    { "src": "/webhook", "dest": "/src/api/webhook.route.js" },
+    { "src": "/preview", "dest": "/src/api/preview.route.js" }
   ]
 }
 
