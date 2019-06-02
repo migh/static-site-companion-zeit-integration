@@ -1,5 +1,5 @@
 {
-  "name": "contentful-integration",
+  "name": "contentful-integration-v2",
   "version": 2,
   "builds": [
     { "src": "src/**/*.js", "use": "@now/node" }
@@ -12,7 +12,9 @@
   ],
   "env": {
     "HOOK_URL": "https://contentful-integration.now.sh",
-    "NODE_ENV": "production"
+    "MONGO_URI": "@zeit-mongo-uri",
+    "ZEIT_CLIENT_ID": "@zeit-client-id",
+    "ZEIT_CLIENT_REDIRECT_URI": "@zeit-client-redirect-uri",
+    "ZEIT_CLIENT_SECRET": "@zeit-client-secret"
   }
 }
-
