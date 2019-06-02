@@ -54,7 +54,7 @@ module.exports = async (req, res) => {
 
       return send(res, 200, newMeta);
     } catch (e) {
-      return send(res, 500, e.message);
+      return send(res, 500, `${e.message} – ${req.url}`);
     }
   }
 
