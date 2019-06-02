@@ -17,8 +17,7 @@ module.exports = async (req, res) => {
 
   if (req.method === 'POST') {
     try {
-      console.log(req.url);
-      const search = url.split('/webhook?')[1];
+      const search = req.url.split('/webhook?')[1];
       const query = parse(search);
       const { config_id, owner_id } = query;
 
