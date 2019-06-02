@@ -33,7 +33,7 @@ const deployContents = {
 
 const dashboardContentMap = {
   [step.dashboard]: () => `
-    <H2>Welcome to vizzz integration dashboard!</H2>
+    <H2>Welcome to the dashboard!</H2>
     <P>Here you can see how your Contentful site is going create a deploy or trigger a build.</P>
   `,
   [step.dashboardDeploy]: (options) => {
@@ -58,6 +58,7 @@ const dashboardContentMap = {
   `,
   [step.dashboardStats]: () => `
     <H2>Stats</H2>
+    <P>Is this working?</P>
   `
 };
 
