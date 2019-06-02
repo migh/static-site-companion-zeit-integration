@@ -1,17 +1,16 @@
 const { parse } = require('url');
 const { json, send } = require('micro');
 const fetch = require('node-fetch');
-
-function getAuthToken(ownerId) {
-  // read integration data from mongo using ownerId
-}
+const { getIntegrationConfig } = require('../services/mongo-integration-config');
 
 module.exports = async (req, res) => {
   const { query } = parse(req.url, true);
   const { config_id, owner_id } = query;
 
+  const integrationConfig = await getIntegrationConfig(owner_id);
+
   const headers = {
-    Authorization: `Bearer ${zeit_token}`
+    Authorization: `Bearer ${integrationConfig.zeitToken}`
   };
   const changes = await json(req);
 
@@ -20,7 +19,18 @@ module.exports = async (req, res) => {
   })
     .then(res => res.json());
 
-  const newMeta = { ...meta, contentfulChanges: changes };
+  const newEntry = {
+    version: changes.sys.version,
+    updatedAt: changes.sys.updatedAt,
+    publishedAt: changes.sys.publishedAt,
+    updatedBy: changes.sys.updatedBy.sys.id,
+    publishedVersion: changes.sys.publishedVersion
+  };
+
+  const newMeta = {
+    ...meta,
+    contentful: Array.isArray(meta.contentful) ? [newEntry, ...meta.contentful] : [newEntry]
+  };
 
   await fetch(`https://api.zeit.co/v1/integrations/configuration/${config_id}/metadata`, {
     headers,
