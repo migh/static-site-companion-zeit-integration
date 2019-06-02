@@ -81,7 +81,11 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     }
 
     if(action === step.dashboardStats) {
-
+      const data = [{
+        publishedAt,
+        publishedVersion,
+        updatedBy,
+      }];
     }
     
     return uiMap[step.dashboard](templatePayload);

@@ -18,10 +18,7 @@ class Client {
       'name': 'My webhook',
       'url': `https://contentful-integration.now.sh/webhook?configId=${zeitConfigId}`,
       'topics': [
-        'Entry.create',
-        'ContentType.create',
-        '*.publish',
-        'Asset.*'
+        '*.publish'
       ]
     }))
     .then((webhook) => console.log(webhook))
