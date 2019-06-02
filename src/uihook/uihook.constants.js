@@ -56,7 +56,7 @@ const dashboardContentMap = {
   [step.dashboardContent]: () => `
     <H2>Content</H2>
   `,
-  [step.dashboardStats]: ({ data }) => console.log(data) || `
+  [step.dashboardStats]: ({ data }) => `
     <H2>Stats</H2>
     <Box textAlign="left" marginLeft="40px">
       ${data.map(d =>
