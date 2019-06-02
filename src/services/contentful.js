@@ -1,5 +1,8 @@
 const contentful = require("contentful");
-const contentfulMgmt = require('contentful-management')
+const contentfulMgmt = require('contentful-management');
+const {
+  HOOK_URL
+} = process.env;
 
 class Client {
   constructor() {
@@ -12,11 +15,11 @@ class Client {
     this.__management = contentfulMgmt.createClient({accessToken: managementToken})
   }
 
-  async createHook (spaceId, zeitConfigId) {
+  async createHook (spaceId, uiHookPayload) {
     client.getSpace(spaceId)
     .then((space) => space.createWebhook({
       'name': 'My webhook',
-      'url': `https://contentful-integration.now.sh/webhook?config_id=${zeitConfigId}`,
+      'url': `${HOOK_URL}/webhook?config_id=${uiHookPayload.configurationId}&owner_id=${payload.user.id}`,
       'topics': [
         '*.publish'
       ]

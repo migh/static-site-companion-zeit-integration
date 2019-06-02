@@ -1,4 +1,5 @@
 const step = {
+  init: 'init',
   view: 'view',
   config: 'config',
   dashboard: 'dashboard',
@@ -63,6 +64,17 @@ const dashboardContentMap = {
 };
 
 const uiMap = {
+  [step.init]: url => `
+    <Page>
+      <Box display="flex" flexDirection="column" justifyContent="center" textAlign="center">
+        <H1>Welcome!</H1>
+        <P>Please enter the credentials to access your Zeit data.</P>
+        <Box display="flex" marginTop="10px" justifyContent="center">
+          <Link href="${url}">Connect to zeit</Link>
+        </Box>
+      </Box>
+    </Page>
+  `,
   [step.view]: () => `
     <Page>
       <Box display="flex" flexDirection="column" justifyContent="center" textAlign="center">
