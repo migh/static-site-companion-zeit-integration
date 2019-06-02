@@ -5,7 +5,18 @@
     { "src": "src/**/*.js", "use": "@now/node" }
   ],
   "routes": [
-    { "src": "/uihook", "dest": "/src/uihook/uihook.route.js" }
-  ]
+    { "src": "/uihook", "dest": "/src/uihook/uihook.route.js" },
+    { "src": "/webhook", "dest": "/src/api/webhook.route.js" },
+    { "src": "/preview", "dest": "/src/api/preview.route.js" },
+    { "src": "/callback", "dest": "/src/api/callback.route.js" }
+  ],
+  "env": {
+    "HOOK_URL": "https://contentful-integration.now.sh",
+    "MONGO_URI": "@contenful-integration-mongo-url",
+    "NODE_ENV": "production",
+    "ZEIT_CLIENT_ID": "@contentful-integration-zeit-client-id",
+    "ZEIT_CLIENT_REDIRECT_URI": "@contentful-integration-zeit-redirect-id",
+    "ZEIT_CLIENT_SECRET": "@contentful-integration-zeit-client-secret"
+  }
 }
 

@@ -1,4 +1,5 @@
-const { parse } = require('url')
+const { parse } = require('url');
+const { send } = require('micro');
 const puppeteer = require('puppeteer');
 const util = require('util');
 const fs = require('fs');
@@ -42,6 +43,6 @@ module.exports = async (req, res) => {
 
     await unlink(path);
 
-    res.set('Content-Type', 'text/html');
-    res.send(template(src));
+    res.setHeader('Content-Type', 'text/html');
+    send(res, 200, template(src));
 };

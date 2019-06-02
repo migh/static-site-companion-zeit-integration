@@ -1,25 +1,40 @@
 const { withUiHook } = require('@zeit/integration-utils');
 
+const { getIntegrationConfig } = require('../services/mongo-integration-config');
 const { client } = require('../services/contentful');
 const { step, uiMap } = require("./uihook.constants");
 
+const {
+  ZEIT_CLIENT_ID
+} = process.env;
+
 module.exports = withUiHook(async ({ payload, zeitClient }) => {
+  const config = await getIntegrationConfig(payload.user.id);
+  let action = payload.action;
+
+  if (!config) {
+    action = step.init;
+  }
+
+  if (action === step.init) {
+    const url = `https://zeit.co/oauth/authorize?client_id=${ZEIT_CLIENT_ID}`;
+    return uiMap[action](url);
+  }
+
   // Get metadata
   const metadata = await zeitClient.getMetadata();
-  const { deliveryToken, space, managementToken, isFirstTime } = metadata;
+  const { deliveryToken, space, managementToken, isFirstTime, contentful = [] } = metadata;
 
   const credentialsComplete = deliveryToken && space && managementToken;
-  
+
   if (credentialsComplete) {
     client.config(space, deliveryToken, managementToken);
   }
 
   if(isFirstTime) {
-    const hook = await client.createHook(space, payload.configurationId);
+    const hook = await client.createHook(space, payload);
   }
 
-  
-  let action = payload.action;
 
   if (action === step.view && !isFirstTime) {
     action = step.config;
@@ -43,7 +58,6 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
   if (action === step.dashboard) {
     if (!credentialsComplete) {
       const { deliveryToken, space, managementToken } = payload.clientState;
-      console.log(deliveryToken, space, managementToken);
 
       try {
         await zeitClient.setMetadata({
@@ -76,7 +90,7 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
         project
       };
     }
-    
+
     if (action === step.dashboardContentTypes) {
       const contentTypes = await client.getContentTypes();
       templatePayload = {
@@ -86,28 +100,19 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     }
 
     if(action === step.dashboardStats) {
-      const data = [{
-        publishedAt: 'blablabla',
-        publishedVersion: '1.5',
-        updatedBy: 'Pepe',
-      },{
-        publishedAt: 'blebleble',
-        publishedVersion: '1.4',
-        updatedBy: 'Pepe',
-      }];
       templatePayload = {
         ...templatePayload,
-        data
+        data: contentful
       };
     }
-    
+
     return uiMap[step.dashboard](templatePayload);
   }
 
   if (action === step.deploy) {
     console.log('Deploying...');
 
-    // const metadata = await zeitClient.getMetadata(); 
+    // const metadata = await zeitClient.getMetadata();
     // modify envvar deliveryToken & spaceId
     return uiMap[step.dashboard]({ section: step.dashboardDeploy, deployed: true });
   }

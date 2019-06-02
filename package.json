@@ -7,7 +7,10 @@
     "@zeit/integration-utils": "latest",
     "contentful": "^7.6.0",
     "contentful-management": "^5.7.2",
-    "express": "^4.17.1",
-    "puppeteer": "^1.17.0"
+    "micro": "^9.3.4",
+    "mongodb": "^3.2.6",
+    "node-fetch": "^2.6.0",
+    "puppeteer": "^1.17.0",
+    "querystring": "^0.2.0"
   }
 }
