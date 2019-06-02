@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
   try {
     integrationConfig = await getIntegrationConfig(owner_id);
   } catch (e) {
-    return send(res, 500, `${e.message} – ${req.url}`);
+    return send(res, 500, `${e.message}`);
   }
 
   const headers = {
@@ -36,20 +36,19 @@ module.exports = async (req, res) => {
     publishedVersion: changes.sys.publishedVersion
   };
 
-  const newMeta = {
-    ...meta,
-    contentful: changes && (Array.isArray(meta.contentful) ? [newEntry, ...meta.contentful] : [newEntry])
-  };
-
   try {
+    const newMeta = {
+      ...meta,
+      contentful: changes && (Array.isArray(meta.contentful) ? [newEntry, ...meta.contentful] : [newEntry])
+    };
+
     await fetch(`https://api.zeit.co/v1/integrations/configuration/${config_id}/metadata`, {
       headers,
       method: 'POST',
       body: JSON.stringify(newMeta)
     });
+    return send(res, 200, newMeta);
   } catch (e) {
     return send(res, 500, `${e.message} – post meta`);
   }
-
-  return send(res, 200, newMeta);
 };
