@@ -23,7 +23,7 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
 
   // Get metadata
   const metadata = await zeitClient.getMetadata();
-  const { deliveryToken, space, managementToken, isFirstTime } = metadata;
+  const { deliveryToken, space, managementToken, isFirstTime, contentful = [] } = metadata;
 
   const credentialsComplete = deliveryToken && space && managementToken;
 
@@ -100,11 +100,10 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     }
 
     if(action === step.dashboardStats) {
-      const data = [{
-        publishedAt,
-        publishedVersion,
-        updatedBy,
-      }];
+      templatePayload = {
+        ...templatePayload,
+        data: contentful
+      };
     }
 
     return uiMap[step.dashboard](templatePayload);
