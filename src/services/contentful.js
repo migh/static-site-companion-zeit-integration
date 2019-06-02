@@ -21,9 +21,7 @@ class Client {
       const webhook = await space.createWebhook({
         'name': `zeit-now-hook-${uiHookPayload.integrationId}-${uiHookPayload.configurationId}`,
         'url': `${HOOK_URL}/webhook?config_id=${encodeURIComponent(uiHookPayload.configurationId)}&owner_id=${encodeURIComponent(uiHookPayload.user.id)}`,
-        'topics': [
-          '*.publish'
-        ]
+        'topics': ['*.publish', '*.auto_save']
       });
       console.info(`Hook created!`, webhook.name);
     } catch (e) {

@@ -29,16 +29,17 @@ module.exports = async (req, res) => {
   }
 
   const newEntry = changes && {
-    version: changes.sys.version,
-    updatedAt: changes.sys.updatedAt,
-    publishedAt: changes.sys.publishedAt,
-    updatedBy: changes.sys.updatedBy && changes.sys.updatedBy.sys.id,
-    publishedVersion: changes.sys.publishedVersion
+    'Version': changes.revision,
+    'Updated at': changes.sys.updatedAt,
+    'Published at': changes.sys.publishedAt,
+    'Updated by': changes.updatedBy && changes.updatedBy.sys.id,
+    'Published version': changes.sys.publishedVersion
   };
 
   try {
     const newMeta = {
       ...meta,
+      hasHook: true,
       contentful: changes && (Array.isArray(meta.contentful) ? [newEntry, ...meta.contentful] : [newEntry])
     };
 
