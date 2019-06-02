@@ -20,7 +20,7 @@ class Client {
     try {
       const webhook = await space.createWebhook({
         'name': `zeit-now-hook-${uiHookPayload.integrationId}-${uiHookPayload.configurationId}`,
-        'url': `${HOOK_URL}/webhook?config_id=${uiHookPayload.configurationId}&owner_id=${uiHookPayload.user.id}`,
+        'url': encodeURIComponent(`${HOOK_URL}/webhook?config_id=${uiHookPayload.configurationId}&owner_id=${uiHookPayload.user.id}`),
         'topics': [
           '*.publish'
         ]

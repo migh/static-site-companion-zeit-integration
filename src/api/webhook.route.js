@@ -1,7 +1,7 @@
+const { parse } = require('url');
 const { json, send } = require('micro');
 const fetch = require('node-fetch');
 const { getIntegrationConfig } = require('../services/mongo-integration-config');
-const { parse } = require('querystring');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,8 +17,7 @@ module.exports = async (req, res) => {
 
   if (req.method === 'POST') {
     try {
-      const search = req.url.split('/webhook?')[1];
-      const query = parse(search);
+      const { query } = parse(req.url, true);
       const { config_id, owner_id } = query;
 
       const integrationConfig = await getIntegrationConfig(owner_id);

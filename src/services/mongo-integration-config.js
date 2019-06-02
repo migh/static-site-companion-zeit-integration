@@ -8,7 +8,7 @@ const { MONGO_URI } = process.env;
  */
 export async function getConfigsCollection() {
   const client = await mongodb.connect(MONGO_URI, { useNewUrlParser: true });
-  const db = await client.db('slack-integration');
+  const db = await client.db('contentful-integration');
   return db.collection('integration-configs');
 }
 
