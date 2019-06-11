@@ -1,0 +1,15 @@
+{
+  "name": "ssg-integration",
+  "version": 2,
+  "builds": [
+    { "src": "src/**/*.js", "use": "@now/node" },
+    { "src": "docs/**/*.md", "use": "@now/md" }
+  ],
+  "routes": [
+    { "src": "/", "dest": "/docs/" },
+    { "src": "/oauth/callback", "dest": "/src/oauth/oauth.route.js" },
+    { "src": "/ping", "dest": "/src/incoming-hook/incoming-hook.route.js" },
+    { "src": "/uihook", "dest": "/src/uihook/uihook.route.js" }
+  ]
+}
+
