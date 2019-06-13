@@ -1,6 +1,6 @@
 {
-  "name": "zeit-integration-vizz",
-  "version": "1.0.0",
+  "name": "static-site-companion-zeit-integration",
+  "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
