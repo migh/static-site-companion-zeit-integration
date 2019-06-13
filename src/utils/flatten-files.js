@@ -1,4 +1,4 @@
-function flattenFiles(files, prefix = '') {
+export function flattenFiles(files, prefix = '') {
   const results = [];
   files.children.forEach( item => {
       if (item.type === 'file') {
@@ -8,7 +8,7 @@ function flattenFiles(files, prefix = '') {
               size: parseInt(Math.random() * 100000) % 8000
           })
       }
-      if (item.type === 'directory') {
+      if (item.type === 'directory' || item.type === 'dir') {
           results.push(...flattenFiles(item, prefix + '/' + item.name));
       }
   });

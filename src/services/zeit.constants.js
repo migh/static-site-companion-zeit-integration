@@ -20,7 +20,7 @@ const ENDPOINTS = {
   }
 };
 
-export {
+export default {
 	ZEIT_CLIENT_ID,
 	ZEIT_CLIENT_SECRET,
 	ZEIT_CLIENT_REDIRECT_URI,

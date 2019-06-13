@@ -6,6 +6,7 @@ const { step, uiMap } = require('./uihook.constants');
 const flattenFiles = require('../utils/flatten-files').default;
 
 module.exports = withUiHook(async ({ payload, zeitClient }) => {
+  console.log(payload);
   // Get metadata
   const metadata = await zeitClient.getMetadata();
   const { deliveryToken, space, managementToken, isFirstTime } = metadata;
@@ -18,7 +19,7 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     const ownerId = payload.teamId || payload.user.id;
 
     try {
-      const hook = await client.createHook(space, ownerId);
+      // const hook = await client.createHook(space, ownerId);
       console.log(`Webhook for set for ownerId: ${ownerId}`);
     } catch(err) {
       console.error(err);
@@ -110,16 +111,17 @@ module.exports = withUiHook(async ({ payload, zeitClient }) => {
     const files = await (await zeitClient.fetch(ENDPOINTS.deployment.files.replace(':id', lastDeployment.uid), {})).json();
     const [ srcFiles, outFiles ] = files;
     const buildFiles = flattenFiles(srcFiles);
-    const newDeployment = await zeitClient.fetch(ENDPOINTS.deployment.new, {
-      method: 'POST',
-      body: JSON.stringify({
-        name: 'zeit-contentful-blog',
-        version: 2,
-        files: buildFiles
-      })
-    });
+    console.log(buildFiles);
+    // const newDeployment = await zeitClient.fetch(ENDPOINTS.deployment.new, {
+    //   method: 'POST',
+    //   body: JSON.stringify({
+    //     name: 'zeit-contentful-blog',
+    //     version: 2,
+    //     files: buildFiles
+    //   })
+    // });
 
-    console.log(await newDeployment.json());
+    // console.log(await newDeployment.json());
 
     // modify envvar deliveryToken & spaceId
     return uiMap[step.dashboard]({ section: step.dashboardDeploy, deployed: true });

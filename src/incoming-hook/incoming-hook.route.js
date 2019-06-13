@@ -1,22 +1,14 @@
 import { parse } from 'url';
 import { send, json } from 'micro';
-import { promisify } from 'util';
 
-import redis from 'redis';
-
-import { client, ENDPOINTS } from '../services/zeit';
-
-const {
-  REDIS_URL,
-  REDIS_PASSWORD: password
-} = process.env;
+import { client } from '../services/zeit';
 
 /**
- * Handles the callback to exchange a ZEIT authorization code for a token.
+ * Handles incoming webhooks to the app.
  */
-export default async function zeitOAuthCallback(req, res) {
+export default async function incomingWebhook(req, res) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
-	res.setHeader('Access-Control-Allow-Methods', 'GET, DELETE, OPTIONS');
+	res.setHeader('Access-Control-Allow-Methods', 'POST, DELETE, OPTIONS');
 	res.setHeader(
 		'Access-Control-Allow-Headers',
 		'Authorization, Accept, Content-Type'
@@ -26,25 +18,20 @@ export default async function zeitOAuthCallback(req, res) {
 		return send(res, 200);
 	}
 
-	if (req.method === 'GET') {
+	if (req.method === 'POST') {
 		const { query } = parse(req.url, true);
-		// const { ...params } = query;
+		const { id: ownerId } = query;
 
-		const redisClient = redis.createClient( REDIS_URL, { password } );
+		await client.setOwnerId(ownerId);
 
-		const getAsync = promisify(redisClient.get).bind(redisClient);
-
-		const storedToken = JSON.parse(await getAsync('token'));
-
-		if (storedToken) {
-      const projects = await client.request(ENDPOINTS.project.list, {
-        headers: {
-          'Authorization': `Bearer ${storedToken['access_token']}`
-        }
-      });
-
-      send(res, 200, projects);
-      return null;
+		try {
+			const newDeployment = await client.triggerDeployment('zeit-contentful-blog');
+			send(res, 200, newDeployment);
+		} catch(err) {
+			console.log(err);
+			send(res, 403);
+		} finally {
+			return null;	
 		}
 	}
 
